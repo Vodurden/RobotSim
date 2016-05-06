@@ -1,7 +1,5 @@
 package net.jakewoods.robotsim
 
-case class Robot(x: Int, y: Int, facing: Facing)
-
 case class Simulation(
   xBounds: Range,
   yBounds: Range,
@@ -14,7 +12,7 @@ case class SimulationResult(
 )
 
 object Simulation {
-  /** Creates a new simulation.
+  /** Creates a new simulation
     *
     * @param width the width of the simulated tabletop in robo-spaces (from 0 to width inclusive)
     * @param height the height of the simulated tabletop in robo-spaces (from 0 to height inclusive)

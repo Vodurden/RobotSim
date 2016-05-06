@@ -113,3 +113,8 @@ add tests in combination with each change.
 
 I considered using the ScalaTest matchers API but it seems like overkill for what I'm doing. Might be
 worth revisiting if the assertions I want to make get more complicated.
+
+It's also looking like the organisation of the data structures is a bit off. It's probably time to split
+things into their own files with the exception of `SimulationResult` as it seems intrinsically tied
+to `Simulation`. Maybe there's a better way to return two named parameters from a function but so far
+I haven't found one.

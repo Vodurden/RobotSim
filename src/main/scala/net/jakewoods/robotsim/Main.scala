@@ -8,8 +8,7 @@ object Main {
     commands.foldLeft(simulation)(commandStep)
   }
 
-  /**
-    * Gathers user inputs from the console and returns a lazy sequence of commands
+  /** Gathers user inputs from the console and returns a lazy sequence of commands
     *
     * getCommands is the input boundary between the impure real world and our nice pure
     * InputMapper.
