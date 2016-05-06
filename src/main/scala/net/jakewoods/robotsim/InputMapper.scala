@@ -1,3 +1,5 @@
+package net.jakewoods.robotsim
+
 /** Maps user input into commands
   *
   */

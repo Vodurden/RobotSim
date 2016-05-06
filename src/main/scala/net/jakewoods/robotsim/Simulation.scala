@@ -1,3 +1,5 @@
+package net.jakewoods.robotsim
+
 case class Robot(x: Int, y: Int)
 
 case class Simulation(

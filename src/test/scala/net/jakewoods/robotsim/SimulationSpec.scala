@@ -1,3 +1,5 @@
+package net.jakewoods.robotsim
+
 class SimulationSpec extends UnitSpec {
   describe("Simulation") {
     describe("when created") {

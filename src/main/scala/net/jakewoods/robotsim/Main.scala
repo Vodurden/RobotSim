@@ -1,3 +1,5 @@
+package net.jakewoods.robotsim
+
 object Main {
   def main(args: Array[String]): Unit = {
     val commands = getCommands()

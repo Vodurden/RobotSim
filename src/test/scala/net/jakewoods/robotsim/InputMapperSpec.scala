@@ -1,3 +1,5 @@
+package net.jakewoods.robotsim
+
 class InputMapperSpec extends UnitSpec {
   describe("InputMapper.string2command") {
     it("should return None when given input that matches no commands") {
