@@ -20,15 +20,18 @@ Planning: Solution Approach
 ---------------------------
 
 When I first read the problem description I had a few ideas on solutions that might prove elegent. I'm
-generally looking to make things as pure as possible (in the functional sense) and I want to express the problem space
-in a way that's clear, easy to understand and easy to extend. With that in mind I considered a few approaches:
+generally looking to make things as pure as possible (in the functional sense) and I want to express the problem
+space in a way that's clear, easy to understand and easy to extend. With that in mind I considered
+a few approaches:
 
 Approach 1: Model the entire problem space as a set of reactive streams.
 
-(Note: I tend to use stream/observable interchangably so if you're used to Rx terminology whenever I say "Stream" think "Observable")
+(Note: I tend to use stream/observable interchangably so if you're used to Rx terminology whenever I say "Stream"
+think "Observable")
 
-I've had success in the past modeling game systems like this. Reactive streams have lots of nice properties for game-like and
-repl-like systems which could make it easy to model our problem domain. I considered the following approach:
+I've had success in the past modeling game systems like this. Reactive streams have lots of nice properties for
+game-like and repl-like systems which could make it easy to model our problem domain. I considered the following
+approach:
 
 * Stream of Strings (cli input, file input, test input)
 * Mapped to a Stream of typesafe commands (Move, Left, etc...) and exclude invalid commands
@@ -44,7 +47,8 @@ I could find were fairly sparse on details. It's definitely a tractable problem 
 with in an interview question since it can be tricky to bridge polling-style interfaces into observables.
 It's looking like I'll need to find another way to inject the inputs but it's worth keeping in mind.
 
-Approach 2: Model the system as a Read-Eval-Print-Loop with mutable state at the IO layer and purity everywhere else
+Approach 2: Model the system as a Read-Eval-Print-Loop with mutable state at the IO layer and purity
+everywhere else
 
 Construct a simple program on a loop that effectively does the following in a loop:
 
@@ -53,25 +57,50 @@ Construct a simple program on a loop that effectively does the following in a lo
     Apply the command to the robot's state. Something like: `state = Robot.step(state, command) `
     Apply any IO effects of the command (mainly REPORT)
 
-The main loop is less pure since we're dealing with IO but both the command parsing and robot step functions could be
-made pure and should be fairly easy to test. Testing sequences of commands might be a bit more awkward then `Approach 1` but
-this solution would probably be easier to implement.
+The main loop is less pure since we're dealing with IO but both the command parsing and robot step functions
+could be made pure and should be fairly easy to test. Testing sequences of commands might be a bit more awkward
+then `Approach 1` but this solution would probably be easier to implement.
 
 Other ideas:
 
-* Use an Effects system (Free Monad + Interpreter): Probably overkill for this problem and not something I'm ready to implement in Scala
-* Don't use the CLI: A lot of the issues could be resolved if I read from a file or another exhaustable stream. However i'd rather the solution
-  handles "infinite" streams as well since that means we can accept any conceptual stream of inputs (did someone say network controlled robot?)
+* Use an Effects system (Free Monad + Interpreter): Probably overkill for this problem and not something
+  I'm ready to implement in Scala
+* Don't use the CLI: A lot of the issues could be resolved if I read from a file or another exhaustable stream.
+  However i'd rather the solution handles "infinite" streams as well since that means we can accept any conceptual
+  stream of inputs (did someone say network controlled robot?)
 
 Initial Commit
 --------------
 
-Because I'm not using an IDE (I use a weird vim+emacs hybrid, ask me about it if you're interested) I ended up putting the initial folder structure
-together myself by looking at examples. Now that the project builds there's two main goals I'm interested in:
+Because I'm not using an IDE (I use a weird vim+emacs hybrid, ask me about it if you're interested) I ended up
+putting the initial folder structure together myself by looking at examples. Now that the project builds
+there's two main goals I'm interested in:
 
 * Figure out our core data structures
 * Put together a minimal end-to-end progam with tests that has the major architectural pieces
 
-I'm a big believer in good data structures: If your data is well thought out then it's easy to write good code. Once we've figured out the core
-data structures I like to put together a "walking skeleton" on functionality: basically something that has all the major conceptual components
-but not all the functionlity. It gives us garden of code that we can begin growing towards our goal.
+I'm a big believer in good data structures: If your data is well thought out then it's easy to write good code.
+Once we've figured out the core data structures I like to put together a "walking skeleton" on functionality:
+basically something that has all the major conceptual components but not all the functionlity. It gives us
+garden of code that we can begin growing towards our goal.
+
+Walking Skeleton
+----------------
+
+As I begin to flesh out the walking skeleton I can see that organising my code idiomatically in Scala
+is going to be tricky. There's talk about cake patterns, packages vs objects, namespaces. Given the
+wide group that Scala appeals to it's not surprising but I wouldn't be surprised if my code in this test
+misses an idiom or two. At the very least I'll endeavour to be clear.
+
+It looks like there's some debate over the use of `fold` vs `match` vs `map + getOrElse` for dealing
+with `Option`s. I've opted to go for `map + getOrElse` for the moment as it seems like a good combination
+of readable and succinct.
+
+It also looks like there's a lot of different testing styles. I opted to use FunSpec simply because it's
+similar to the last project I worked on but any would do. I also really like the approach ScalaTest
+has taken with using traits to opt-in to test runner behavior.
+
+At this point it seems like I've been able to model something similar to Approach 1 except instead of
+using an Observable we're just using an Iterable. This design seems to be working as the initial tests
+are pretty simple to express but we'll have to see how it evolves. It seems like the main trouble will
+come from `Main.scala` but hopefully we can find a way to test that.
