@@ -105,8 +105,8 @@ using an Observable we're just using an Iterable. This design seems to be workin
 are pretty simple to express but we'll have to see how it evolves. It seems like the main trouble will
 come from `Main.scala` but hopefully we can find a way to test that.
 
-Building Features
------------------
+Input Mapping
+-------------
 
 Now that we've got some structure it's time to introduce some features. At this point I'm starting to use
 add tests in combination with each change.
@@ -118,3 +118,21 @@ It's also looking like the organisation of the data structures is a bit off. It'
 things into their own files with the exception of `SimulationResult` as it seems intrinsically tied
 to `Simulation`. Maybe there's a better way to return two named parameters from a function but so far
 I haven't found one.
+
+At this point I think it's a good idea to deal with our Input. It'd be good to be mapping all of our
+command line inputs into real commands. It's also time to move as much input logic as possible into a
+testable place.
+
+Dealing with the parsing was interesting. I wanted to ignore as much whitespace as possible but we need
+to pay attention to the whitespace separating `PLACE` and it's arguments. I opted to ignore all other
+whitespace and to do the parsing using basic string splits.
+
+Generally when doing parsing I opt to write a proper state-machine style parser or use a parsing library.
+In this case the grammar is fairly simple and I'm confident we should be able to handle all strings
+despite using strings. At this point my major concern is making sure the `string2command` function is
+*total*: it should be able to accept *all* strings even if most of them will result in None
+
+At this point I'm also starting to use monad comprehensions (for/yield) which I have sorely missed when
+working with other languages. It's making working with Option types very pleasant. I found it a bit
+surprising that parsing `String -> Option[Int]` requires a Try/Catch (even if it's hidden in the try library)
+but I'd imagine it's not a big deal in most cases.
