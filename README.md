@@ -104,3 +104,12 @@ At this point it seems like I've been able to model something similar to Approac
 using an Observable we're just using an Iterable. This design seems to be working as the initial tests
 are pretty simple to express but we'll have to see how it evolves. It seems like the main trouble will
 come from `Main.scala` but hopefully we can find a way to test that.
+
+Building Features
+-----------------
+
+Now that we've got some structure it's time to introduce some features. At this point I'm starting to use
+add tests in combination with each change.
+
+I considered using the ScalaTest matchers API but it seems like overkill for what I'm doing. Might be
+worth revisiting if the assertions I want to make get more complicated.

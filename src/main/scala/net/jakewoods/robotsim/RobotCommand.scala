@@ -7,7 +7,7 @@ case class East() extends Facing
 case class West() extends Facing
 
 sealed abstract class RobotCommand
-case class Place(x: Integer, y: Integer, facing: Facing) extends RobotCommand
+case class Place(x: Int, y: Int, facing: Facing) extends RobotCommand
 case class Move() extends RobotCommand
 case class Left() extends RobotCommand
 case class Right() extends RobotCommand
