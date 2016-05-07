@@ -50,7 +50,7 @@ case class Simulation(
   private def stepMessages(robot: Option[Robot], command: RobotCommand): List[String] = {
     robot.map { r =>
       command match {
-        case Report => List(r.toString())
+        case Report => List(Robot.robot2string(r))
         case _ => List()
       }
     }.getOrElse(List())

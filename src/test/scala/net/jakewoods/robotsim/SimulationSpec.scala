@@ -65,7 +65,7 @@ class SimulationSpec extends UnitSpec {
           .step(Place(1, 1, North))
           .step(Report)
 
-        assert(simulation.messages == List("Robot(1,1,North)"))
+        assert(simulation.messages == List("1,1,NORTH"))
       }
     }
   }
