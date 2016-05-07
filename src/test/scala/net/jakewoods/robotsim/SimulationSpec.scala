@@ -38,9 +38,26 @@ class SimulationSpec extends UnitSpec {
 
         assert(simulation.robot == Some(Robot(1, 2, North)))
       }
+
+      it("should not place a robot out of bounds") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(10, 10, North))
+
+        assert(simulation.robot.isEmpty)
+      }
     }
 
     describe("when it has a robot") {
+      it("the robot should change places when given the Place command") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(1,1,North))
+          .step(Place(3,3,South))
+
+        assert(simulation.robot == Some(Robot(3,3,South)))
+      }
+
       it("the robot should turn left when given the Left command") {
         val simulation = Simulation
           .create(5, 5)
@@ -102,6 +119,57 @@ class SimulationSpec extends UnitSpec {
           .step(Report)
 
         assert(simulation.messages == List("1,1,NORTH"))
+      }
+
+      it("should not repeat messages when preventing the robot from falling off the table") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(0, 0, South))
+          .step(Report)
+          .step(Move)
+
+        assert(simulation.robot == Some(Robot(0, 0, South)))
+        assert(simulation.messages.isEmpty)
+      }
+
+      it("should not fall off the NORTH end of the table") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(4, 4, North))
+          .step(Move)
+          .step(Move) // This robot is tenacious!
+
+        assert(simulation.robot == Some(Robot(4, 4, North)))
+      }
+
+      it("should not fall off the SOUTH end of the table") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(0, 0, South))
+          .step(Move)
+          .step(Move)
+
+        assert(simulation.robot == Some(Robot(0, 0, South)))
+      }
+
+      it("should not fall off the EAST end of the table") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(4, 2, East))
+          .step(Move)
+          .step(Move)
+
+        assert(simulation.robot == Some(Robot(4, 2, East)))
+      }
+
+      it("should not fall off the WEST end of the table") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(0, 2, West))
+          .step(Move)
+          .step(Move)
+
+        assert(simulation.robot == Some(Robot(0, 2, West)))
       }
     }
   }

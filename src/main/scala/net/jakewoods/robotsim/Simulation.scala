@@ -17,7 +17,7 @@ case class Simulation(
     * more information about the available commands.
     *
     * If a command results in an invalid simulation the existing simulation will
-    * be returned.
+    * be returned without it's messages.
     *
     * This function also returns a list of messages. Any command may result in a message.
     *
@@ -31,10 +31,14 @@ case class Simulation(
     val nextMessages = stepMessages(nextRobot, command)
 
     // Produce our new simulation
-    this.copy(
-      robot = nextRobot,
-      messages = nextMessages
-    )
+    val nextSimulation = this.copy(robot = nextRobot, messages = nextMessages)
+
+    // We only want to return the new simulation if it's valid. If it's not
+    // we effectively 'undo' it by returning ourselves without any messages.
+    if(nextSimulation.isValid())
+      nextSimulation
+    else
+      this.copy(messages = List())
   }
 
   private def stepRobot(robot: Option[Robot], command: RobotCommand): Option[Robot] = {
@@ -57,6 +61,19 @@ case class Simulation(
     }.getOrElse(List()) // No robot means no messages
   }
 
+  /** Validates the state of this simulation
+    *
+    * A simulation is valid if:
+    *
+    * - The robot is within the bounds of the simulation
+    *
+    * @returns True if the simulation is valid. False otherwise.
+    */
+  private def isValid(): Boolean = {
+    this.robot
+      .map(r => xBounds.contains(r.x) && yBounds.contains(r.y))
+      .getOrElse(true) // If we don't have a robot then our simulation is valid.
+  }
 }
 
 object Simulation {
@@ -67,8 +84,8 @@ object Simulation {
     * @returns a new simulation with no robot
     */
   def create(width: Int, height: Int): Simulation = Simulation(
-    xBounds = Range.inclusive(0, width),
-    yBounds = Range.inclusive(0, height),
+    xBounds = Range.inclusive(0, width - 1),
+    yBounds = Range.inclusive(0, height - 1),
     robot = None,
     messages = List()
   )
