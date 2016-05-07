@@ -1,5 +1,7 @@
 package net.jakewoods.robotsim
 
+/** Simulates a command interpreter controlling a robot on a dangerously tall tabletop.
+  */
 case class Simulation(
   xBounds: Range,
   yBounds: Range,
@@ -8,7 +10,7 @@ case class Simulation(
 
   /** Executes the command on the simulation and returns the updated simulation and any messages
     *
-    * Commands can do up to two things:
+    * Commands update the state of the simulation. At the moment they can:
     *
     * - Change the state of the robot
     * - Produce one or more messages
@@ -19,11 +21,8 @@ case class Simulation(
     * If a command results in an invalid simulation the existing simulation will
     * be returned without it's messages.
     *
-    * This function also returns a list of messages. Any command may result in a message.
-    *
-    * @param simulation the simulation to run the command on
     * @param command the command to execute
-    * @returns a [[SimulationResult]] with the updated simulation and a list of messages
+    * @return a [[Simulation]] the updated simulation
     */
   def step(command: RobotCommand): Simulation = {
     // Apply our commands to our simulation state
@@ -67,7 +66,7 @@ case class Simulation(
     *
     * - The robot is within the bounds of the simulation
     *
-    * @returns True if the simulation is valid. False otherwise.
+    * @return True if the simulation is valid. False otherwise.
     */
   private def isValid(): Boolean = {
     this.robot
@@ -81,7 +80,7 @@ object Simulation {
     *
     * @param width the width of the simulated tabletop in robo-spaces (from 0 to width inclusive)
     * @param height the height of the simulated tabletop in robo-spaces (from 0 to height inclusive)
-    * @returns a new simulation with no robot
+    * @return a new simulation with no robot
     */
   def create(width: Int, height: Int): Simulation = Simulation(
     xBounds = Range.inclusive(0, width - 1),

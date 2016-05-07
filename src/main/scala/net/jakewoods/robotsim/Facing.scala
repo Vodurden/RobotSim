@@ -7,11 +7,11 @@ case object East extends Facing
 case object West extends Facing
 
 object Facing {
-  /** Maps a single string to a [[net.jakewoods.robotsim.Facing]].
+  /** Maps a single string to a [[Facing]].
     *
-    * If the string is valid returns the corrsponding [[net.jakewoods.robotsim.Facing]] in an Option.
+    * If the string is valid returns the corresponding [[Facing]] in an Option.
     *
-    * If the string is invalid None is returneed
+    * If the string is invalid None is returned
     *
     * Valid strings are:
     *
@@ -25,7 +25,7 @@ object Facing {
     * Facings **are not case insensitive**. E.g. `North` is not a valid facing.
     *
     * @param s the string to parse
-    * @returns the parsed [[net.jakewoods.robotsim.Facing]] or None
+    * @return the parsed [[Facing]] or None
     */
   def string2facing(s: String): Option[Facing] = {
     s.trim() match {

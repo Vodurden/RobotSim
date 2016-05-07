@@ -2,6 +2,10 @@ package net.jakewoods.robotsim
 
 import scala.util.Try
 
+/** Represents a command that can be executed in the simulation
+  *
+  * Each command has a difference effect. Consult [[Simulation.step]] for more information.
+  */
 sealed abstract class RobotCommand
 case class Place(x: Int, y: Int, facing: Facing) extends RobotCommand
 case object Move extends RobotCommand
@@ -10,9 +14,9 @@ case object Right extends RobotCommand
 case object Report extends RobotCommand
 
 object RobotCommand {
-  /** Maps a single string to a [[net.jakewoods.robotsim.RobotCommand]].
+  /** Maps a single string to a [[RobotCommand]].
     *
-    * If the string is valid this function returns the corresponding [[net.jakewoods.robotsim.RobotCommand]]
+    * If the string is valid this function returns the corresponding [[RobotCommand]]
     * in an Option.
     *
     * If the string is invalid None is returned.
@@ -39,7 +43,7 @@ object RobotCommand {
     * Commands **are not case insensitive**. `Move` is not a valid command.
     *
     * @param s the string to pars
-    * @returns the parsed robot command or None
+    * @return the parsed robot command or None
     */
   def string2command(s: String): Option[RobotCommand] = {
     // We're going to make the assumption that commands follow the form:
@@ -78,13 +82,13 @@ object RobotCommand {
     * - `command` is "PLACE"
     * - `arguments` exists and contains three elements
     * - `argument(0)` and `argument(1)` are strings that are convertible to Ints.
-    * - `argument(2)` is a string parseable by [[InputMapper.string2facing]]
+    * - `argument(2)` is a string parsable by [[Facing.string2facing]]
     *
     * If these expectations are not met this function returns None
     *
     * @param command the name of the command executed by the user
     * @param arguments the arguments of the command executed by the user
-    * @returns A [[net.jakewoods.robotsim.Place]] command or None
+    * @return A [[Place]] command or None
     */
   private def place(command: String, arguments: Option[Array[String]]): Option[RobotCommand] = {
     for {
@@ -100,7 +104,7 @@ object RobotCommand {
     *
     * @param command the name of the command executed by the user
     * @param arguments the arguments of the command executed by the user
-    * @returns A [[net.jakewoods.robotsim.Move]] command or None
+    * @return A [[Move]] command or None
     */
   private def move(command: String, arguments: Option[Array[String]]): Option[RobotCommand] =
     if(command == "MOVE" && arguments.isEmpty) Some(Move) else None
@@ -109,7 +113,7 @@ object RobotCommand {
     *
     * @param command the name of the command executed by the user
     * @param arguments the arguments of the command executed by the user
-    * @returns A [[net.jakewoods.robotsim.Left]] command or None
+    * @return A [[Left]] command or None
     */
   private def left(command: String, arguments: Option[Array[String]]): Option[RobotCommand] =
     if(command == "LEFT" && arguments.isEmpty) Some(Left) else None
@@ -118,7 +122,7 @@ object RobotCommand {
     *
     * @param command the name of the command executed by the user
     * @param arguments the arguments of the command executed by the user
-    * @returns A [[net.jakewoods.robotsim.Right]] command or None
+    * @return A [[Right]] command or None
     */
   private def right(command: String, arguments: Option[Array[String]]): Option[RobotCommand] =
     if(command == "RIGHT" && arguments.isEmpty) Some(Right) else None
@@ -127,7 +131,7 @@ object RobotCommand {
     *
     * @param command the name of the command executed by the user
     * @param arguments the arguments of the command executed by the user
-    * @returns A [[net.jakewoods.robotsim.Report]] command or None
+    * @return A [[Report]] command or None
     */
   private def report(command: String, arguments: Option[Array[String]]): Option[RobotCommand] =
     if(command == "REPORT" && arguments.isEmpty) Some(Report) else None

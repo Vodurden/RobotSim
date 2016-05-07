@@ -13,7 +13,7 @@ object InputMapper {
     * it is designed to deal with line-by-line input.
     *
     * @param inputs the inputs to process
-    * @returns a sequence of valid commands
+    * @return a sequence of valid commands
     */
   def strings2commands(inputs: Iterator[String]): Iterator[RobotCommand] = {
     inputs

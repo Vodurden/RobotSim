@@ -13,6 +13,10 @@ object Main {
     *
     * commandStep forms the heart of our Read-Eval-Print-Loop. It forms the output half
     * of our real world interaction.
+    *
+    * @param simulation the simulation to step forward
+    * @param command the command to apply to the simulation
+    * @return the updated simulation
     */
   private def commandStep(simulation: Simulation, command: RobotCommand): Simulation = {
     val nextSimulation = simulation.step(command)

@@ -174,3 +174,14 @@ To that effect I ended up moving the Simulation methods into the case class itse
 is still immutable and pure but I couldn't find any clear guidelines when you've got a single case class
 and you want immutable methods that operate on this case class. Other options included traits and
 a base class but both of those seemed unneeded since we've just got a single class.
+
+At this point we just need to finish adding the commands and add simulation validation. This turned out
+to be fairly easy particularly with the design I've chosen.
+
+Final Thoughts
+--------------
+
+At this point all that's left it to open it in IntelliJ so anyone who looks at this doesn't see any
+angry red lines that my editor might not pick up but IntelliJ will. Overall this has been a fun bit of
+work and a good excuse to learn some more Scala. Hopefully you all like this solution and I'm looking
+forward to getting some feedback on it.
