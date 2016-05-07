@@ -2,6 +2,39 @@ package net.jakewoods.robotsim
 
 class SimulationSpec extends UnitSpec {
   describe("Simulation") {
+    it("should satisfy 'Example A' in PROBLEM.md") {
+      val simulation = Simulation
+        .create(5, 5)
+        .step(Place(0, 0, North))
+        .step(Move)
+        .step(Report)
+
+      assert(simulation.messages == List("0,1,NORTH"))
+    }
+
+    it("should satisfy 'Example B' in PROBLEM.md") {
+      val simulation = Simulation
+        .create(5, 5)
+        .step(Place(0, 0, North))
+        .step(Left)
+        .step(Report)
+
+      assert(simulation.messages == List("0,0,WEST"))
+    }
+
+    it("should satisfy 'Example C' in PROBLEM.md") {
+      val simulation = Simulation
+        .create(5, 5)
+        .step(Place(1, 2, East))
+        .step(Move)
+        .step(Move)
+        .step(Left)
+        .step(Move)
+        .step(Report)
+
+      assert(simulation.messages == List("3,3,NORTH"))
+    }
+
     describe("when created") {
       it("should not have a robot") {
         val simulation = Simulation.create(5, 5)
