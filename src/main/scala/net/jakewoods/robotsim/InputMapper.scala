@@ -46,10 +46,10 @@ object InputMapper {
     */
   def string2facing(s: String): Option[Facing] = {
     s.trim() match {
-      case "NORTH" => Some(North())
-      case "SOUTH" => Some(South())
-      case "EAST" => Some(East())
-      case "WEST" => Some(West())
+      case "NORTH" => Some(North)
+      case "SOUTH" => Some(South)
+      case "EAST" => Some(East)
+      case "WEST" => Some(West)
       case _ => None
     }
   }
@@ -147,7 +147,7 @@ object InputMapper {
     * @returns A [[net.jakewoods.robotsim.Move]] command or None
     */
   private def move(command: String, arguments: Option[Array[String]]): Option[RobotCommand] =
-    if(command == "MOVE" && arguments.isEmpty) Some(Move()) else None
+    if(command == "MOVE" && arguments.isEmpty) Some(Move) else None
 
   /** Attempts to parse the LEFT command
     *
@@ -156,7 +156,7 @@ object InputMapper {
     * @returns A [[net.jakewoods.robotsim.Left]] command or None
     */
   private def left(command: String, arguments: Option[Array[String]]): Option[RobotCommand] =
-    if(command == "LEFT" && arguments.isEmpty) Some(Left()) else None
+    if(command == "LEFT" && arguments.isEmpty) Some(Left) else None
 
   /** Attempts to parse the RIGHT command
     *
@@ -165,7 +165,7 @@ object InputMapper {
     * @returns A [[net.jakewoods.robotsim.Right]] command or None
     */
   private def right(command: String, arguments: Option[Array[String]]): Option[RobotCommand] =
-    if(command == "RIGHT" && arguments.isEmpty) Some(Right()) else None
+    if(command == "RIGHT" && arguments.isEmpty) Some(Right) else None
 
   /** Attempts to parse the REPORT command
     *
@@ -174,5 +174,5 @@ object InputMapper {
     * @returns A [[net.jakewoods.robotsim.Report]] command or None
     */
   private def report(command: String, arguments: Option[Array[String]]): Option[RobotCommand] =
-    if(command == "REPORT" && arguments.isEmpty) Some(Report()) else None
+    if(command == "REPORT" && arguments.isEmpty) Some(Report) else None
 }

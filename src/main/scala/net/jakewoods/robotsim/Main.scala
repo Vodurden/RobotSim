@@ -15,10 +15,10 @@ object Main {
     * of our real world interaction.
     */
   private def commandStep(simulation: Simulation, command: RobotCommand): Simulation = {
-    val result = Simulation.step(simulation, command)
+    val nextSimulation = simulation.step(command)
 
-    result.messages.foreach(println)
+    nextSimulation.messages.foreach(println)
 
-    result.simulation
+    nextSimulation
   }
 }

@@ -6,7 +6,7 @@ class InputMapperSpec extends UnitSpec {
       val inputs = List("PLACE 0,2,NORTH", "MOVE", "RIGHT", "MOVE").toIterator
 
       val results = InputMapper.strings2commands(inputs).toStream
-      val expected = List(Place(0,2,North()), Move(), Right(), Move()).toStream
+      val expected = List(Place(0,2,North), Move, Right, Move).toStream
 
       assert(results == expected)
     }
@@ -15,7 +15,7 @@ class InputMapperSpec extends UnitSpec {
       val inputs = List("PLACE 1,2,EAST", "bad input", "RIGHT", "more bad input").toIterator
 
       val results = InputMapper.strings2commands(inputs).toStream
-      val expected = List(Place(1,2,East()), Right()).toStream
+      val expected = List(Place(1,2,East), Right).toStream
 
       assert(results == expected)
     }
@@ -37,20 +37,20 @@ class InputMapperSpec extends UnitSpec {
   }
 
   describe("InputMapper.string2facing") {
-    it("should return Some(North()) when given NORTH") {
-      assert(InputMapper.string2facing("NORTH") == Some(North()))
+    it("should return Some(North) when given NORTH") {
+      assert(InputMapper.string2facing("NORTH") == Some(North))
     }
 
-    it("should return Some(South()) when given SOUTH") {
-      assert(InputMapper.string2facing("SOUTH") == Some(South()))
+    it("should return Some(South) when given SOUTH") {
+      assert(InputMapper.string2facing("SOUTH") == Some(South))
     }
 
-    it("should return Some(East()) when given EAST") {
-      assert(InputMapper.string2facing("EAST") == Some(East()))
+    it("should return Some(East) when given EAST") {
+      assert(InputMapper.string2facing("EAST") == Some(East))
     }
 
-    it("should return Some(West()) when given WEST") {
-      assert(InputMapper.string2facing("WEST") == Some(West()))
+    it("should return Some(West) when given WEST") {
+      assert(InputMapper.string2facing("WEST") == Some(West))
     }
 
     it("should return None for empty strings") {
@@ -76,7 +76,7 @@ class InputMapperSpec extends UnitSpec {
 
   describe("InputMapper.string2command") {
     it("should return Some(Place(x,y,f)) when given PLACE with correct args") {
-      assert(InputMapper.string2command("PLACE 1,2,NORTH") == Some(Place(1,2,North())))
+      assert(InputMapper.string2command("PLACE 1,2,NORTH") == Some(Place(1,2,North)))
     }
 
     it("should return None when given PLACE with a non-integer x") {
@@ -112,32 +112,32 @@ class InputMapperSpec extends UnitSpec {
       assert(InputMapper.string2command("PLACE1,2,NORTH") == None)
     }
 
-    it("should return Some(Move()) when given MOVE") {
-      assert(InputMapper.string2command("MOVE") == Some(Move()))
+    it("should return Some(Move) when given MOVE") {
+      assert(InputMapper.string2command("MOVE") == Some(Move))
     }
 
     it("should return None when given MOVE with arguments") {
       assert(InputMapper.string2command("MOVE arg") == None)
     }
 
-    it("should return Some(Left()) when given LEFT") {
-      assert(InputMapper.string2command("LEFT") == Some(Left()))
+    it("should return Some(Left) when given LEFT") {
+      assert(InputMapper.string2command("LEFT") == Some(Left))
     }
 
     it("should return None when given LEFT with arguments") {
       assert(InputMapper.string2command("LEFT arg") == None)
     }
 
-    it("should return Some(Right()) when given RIGHT") {
-      assert(InputMapper.string2command("RIGHT") == Some(Right()))
+    it("should return Some(Right) when given RIGHT") {
+      assert(InputMapper.string2command("RIGHT") == Some(Right))
     }
 
     it("should return None when given RIGHT with arguments") {
       assert(InputMapper.string2command("RIGHT arg") == None)
     }
 
-    it("should return Some(Report()) when given REPORT") {
-      assert(InputMapper.string2command("REPORT") == Some(Report()))
+    it("should return Some(Report) when given REPORT") {
+      assert(InputMapper.string2command("REPORT") == Some(Report))
     }
 
     it("should return None when given REPORT with arguments") {

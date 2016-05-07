@@ -161,3 +161,16 @@ To work but I couldn't get the iterator produced by `scanLeft` to produce it's i
 This meant that all the commands were printing off-by-one. I think there's a solution here but for now I'm
 just going to move that logic back into main but it feels like it would be solvable if I understood
 exactly how the lazy evaluation is implemented in Iterator.
+
+Simulation Work
+---------------
+
+After implementing a few commands and their tests it seems clear that the `SimulationResult` returned
+by the simulation is awkward to work with. At this point it makes more sense to fold messages into the
+Simulation itself.
+
+I wanted to compose several `step` commands and it seemed like a fluent interface would be the easiest way.
+To that effect I ended up moving the Simulation methods into the case class itself. It seems ok as everything
+is still immutable and pure but I couldn't find any clear guidelines when you've got a single case class
+and you want immutable methods that operate on this case class. Other options included traits and
+a base class but both of those seemed unneeded since we've just got a single class.
