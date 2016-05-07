@@ -59,6 +59,42 @@ class SimulationSpec extends UnitSpec {
         assert(simulation.robot == Some(Robot(1, 1, East)))
       }
 
+      it("should move up one square when given the Move command and facing NORTH") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(2, 2, North))
+          .step(Move)
+
+        assert(simulation.robot == Some(Robot(2, 3, North)))
+      }
+
+      it("should move down one square when given the Move command and facing SOUTH") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(2, 2, South))
+          .step(Move)
+
+        assert(simulation.robot == Some(Robot(2, 1, South)))
+      }
+
+      it("should move left one square when given the Move command and facing WEST") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(2, 2, West))
+          .step(Move)
+
+        assert(simulation.robot == Some(Robot(1, 2, West)))
+      }
+
+      it("should move right one square when given the Move command and facing EAST") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(2, 2, East))
+          .step(Move)
+
+        assert(simulation.robot == Some(Robot(3, 2, East)))
+      }
+
       it("it should return a message containing the robots details when given the Report command") {
         val simulation = Simulation
           .create(5, 5)

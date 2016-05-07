@@ -41,8 +41,9 @@ case class Simulation(
     // We don't use `robot.map` for `Place()` since we don't care if the robot already exists.
     command match {
       case Place(x, y, facing) => Some(Robot(x, y, facing))
-      case Left => robot.map(r => r.copy(facing = Facing.rotateLeft(r.facing)))
-      case Right => robot.map(r => r.copy(facing = Facing.rotateRight(r.facing)))
+      case Move => robot.map(_.move)
+      case Left => robot.map(_.turnLeft)
+      case Right => robot.map(_.turnRight)
       case _ => robot
     }
   }
@@ -53,7 +54,7 @@ case class Simulation(
         case Report => List(Robot.robot2string(r))
         case _ => List()
       }
-    }.getOrElse(List())
+    }.getOrElse(List()) // No robot means no messages
   }
 
 }
