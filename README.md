@@ -136,3 +136,28 @@ At this point I'm also starting to use monad comprehensions (for/yield) which I 
 working with other languages. It's making working with Option types very pleasant. I found it a bit
 surprising that parsing `String -> Option[Int]` requires a Try/Catch (even if it's hidden in the try library)
 but I'd imagine it's not a big deal in most cases.
+
+Input Refactoring
+-----------------
+
+We're almost ready to do the Simulation but before that something is bothering me. `Main` is doing
+far too much work. At the most it should be gathering our CLI input and printing the results but
+it's also doing some input mapping and simulation stepping.
+
+I ended up moving the `Iterator[String] -> Iterator[RobotCommand]` fully into the InputMapper
+as it seems to make sense there. While Simulation execution probably should belong in `Simulation`.
+The only tricky bit there is leaving the stdout concerns in Main but that can be solved by returning
+the messages as a lazy result from executing the simulation.
+
+According to the documentation ScalaTest seems to prefer Streams over Iterators for comparing lazy
+sequences so I'll be using `toStream` in all the tests that compare Iterators. It does raise the question of
+if I should use Streams everywhere but I'll defer decision until I understand the implications better.
+
+I spent a fair bit of time trying to get something of the form:
+
+    run(simulation: Simulation, commands: Iterator[RobotCommand]): Iterator[SimulationResults]
+
+To work but I couldn't get the iterator produced by `scanLeft` to produce it's initial state immediately.
+This meant that all the commands were printing off-by-one. I think there's a solution here but for now I'm
+just going to move that logic back into main but it feels like it would be solvable if I understood
+exactly how the lazy evaluation is implemented in Iterator.
