@@ -4,13 +4,7 @@ Thought Timeline
 Planning: Languages & Tools
 ---------------------------
 
-I'm taking a bit of a risk here and choosing to go with Scala. Out of the options presented to me it
-seems like a good fit. It's statically typed, has good functional support and it's a technology I'd like
-to work in if hired by REA.
-
-It's a risk because I've done very little Scala work outside of a few tiny hobby projects. I've been
-to some of the Scala meetups and I'm hoping that my ability to learn quickly combined with my usual
-functional style will map well into a scala solution.
+This is the first real bit of Scala I've written so beware: Not all idioms may be correct here :)
 
 Given that I don't know a huge amount about the ecosystem I'm going to pick a fairly safe looking test
 runner (ScalaTest seems to be the most popular) and I'll likely run a few linters to see if they pick
