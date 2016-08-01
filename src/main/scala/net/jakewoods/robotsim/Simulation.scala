@@ -5,7 +5,7 @@ package net.jakewoods.robotsim
 case class Simulation(
   xBounds: Range,
   yBounds: Range,
-  obstacles: Set[(Int,Int)],
+  obstacles: Set[Position],
   robot: Option[Robot],
   messages: Seq[String]) {
 
@@ -53,7 +53,7 @@ case class Simulation(
   private def stepRobot(robot: Option[Robot], command: RobotCommand): Option[Robot] = {
     // We don't use `robot.map` for `Place()` since we don't care if the robot already exists.
     command match {
-      case Place(x, y, facing) => Some(Robot(x, y, facing))
+      case Place(x, y, facing) => Some(Robot(Position(x,y), facing))
       case Move => robot.map(_.move)
       case Left => robot.map(_.turnLeft)
       case Right => robot.map(_.turnRight)
@@ -61,7 +61,7 @@ case class Simulation(
     }
   }
 
-  private def stepObstacles(robot: Option[Robot], obstacles: Set[(Int, Int)], command: RobotCommand): Set[(Int,Int)] = {
+  private def stepObstacles(robot: Option[Robot], obstacles: Set[Position], command: RobotCommand): Set[Position] = {
     robot.map { r =>
       command match {
         case PlaceObject => obstacles + r.targetedSpace()
@@ -91,15 +91,15 @@ case class Simulation(
     */
   private def isValid(): Boolean = {
     val robotWithinBounds = this.robot
-      .map(r => xBounds.contains(r.x) && yBounds.contains(r.y))
+      .map(r => xBounds.contains(r.pos.x) && yBounds.contains(r.pos.y))
       .getOrElse(true) // If we don't have a robot then our robot position is valid.
 
     val robotNotInObjects = this.robot
-      .map(r => !obstacles.contains((r.x, r.y)))
+      .map(r => !obstacles.contains(r.pos))
       .getOrElse(true) // If we don't have a robot then it's not in an object
 
     val obstaclesWithinBounds = obstacles
-      .map(o => xBounds.contains(o._1) && yBounds.contains(o._2))
+      .map(o => xBounds.contains(o.x) && yBounds.contains(o.y))
       .foldRight(true)((a, b) => a && b)
 
     robotWithinBounds && robotNotInObjects && obstaclesWithinBounds

@@ -8,29 +8,28 @@ package net.jakewoods.robotsim
   * Robots do not care about the coordinates given to them and will happily
   * exist in a negative space.
   */
-case class Robot(x: Int, y: Int, facing: Facing) {
+case class Robot(pos: Position, facing: Facing) {
   /** Returns the space the robot is looking at
     */
-  def targetedSpace(): (Int,Int) = {
+  def targetedSpace(): Position = {
     val directionVector = facing match {
-      case North => (0, 1)
-      case South => (0, -1)
-      case East => (1, 0)
-      case West => (-1, 0)
+      case North => Position(0, 1)
+      case South => Position(0, -1)
+      case East => Position(1, 0)
+      case West => Position(-1, 0)
     }
 
-    val newX = x + directionVector._1
-    val newY = y + directionVector._2
-    (newX, newY)
+    Position(
+      pos.x + directionVector.x,
+      pos.y + directionVector.y
+    )
   }
   /** Returns a new robot that has moved robo-unit in the direction it's facing
     *
     * @return the updated robot
     */
   def move() = {
-    val (newX, newY) = targetedSpace()
-
-    this.copy(x = newX, y = newY)
+    this.copy(pos = targetedSpace())
   }
 
   /** Returns a new robot that has turned 90 degrees to the left
@@ -65,6 +64,6 @@ object Robot {
   def robot2string(robot: Robot): String = {
     val facing = Facing.facing2string(robot.facing)
 
-    s"${robot.x},${robot.y},$facing"
+    s"${robot.pos.x},${robot.pos.y},$facing"
   }
 }

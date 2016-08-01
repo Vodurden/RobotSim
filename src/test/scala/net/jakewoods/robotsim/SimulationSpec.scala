@@ -75,7 +75,7 @@ class SimulationSpec extends UnitSpec {
           .create(5, 5)
           .step(Place(1, 2, North))
 
-        assert(simulation.robot == Some(Robot(1, 2, North)))
+        assert(simulation.robot == Some(Robot(Position(1, 2), North)))
       }
 
       it("should not place a robot out of bounds") {
@@ -94,7 +94,7 @@ class SimulationSpec extends UnitSpec {
           .step(Place(1,1,North))
           .step(Place(3,3,South))
 
-        assert(simulation.robot == Some(Robot(3,3,South)))
+        assert(simulation.robot == Some(Robot(Position(3,3),South)))
       }
 
       it("the robot should place an object when given the PlaceObject command") {
@@ -103,7 +103,7 @@ class SimulationSpec extends UnitSpec {
           .step(Place(1,1,North))
           .step(PlaceObject)
 
-        assert(simulation.obstacles == Set((1,2)))
+        assert(simulation.obstacles == Set(Position(1,2)))
       }
 
       it("should not place obstacles off the table when given the PlaceObject command") {
@@ -121,7 +121,7 @@ class SimulationSpec extends UnitSpec {
           .step(Place(1,1,North))
           .step(Left)
 
-        assert(simulation.robot == Some(Robot(1, 1, West)))
+        assert(simulation.robot == Some(Robot(Position(1, 1), West)))
       }
 
       it("the robot should turn right when given the Right command") {
@@ -130,7 +130,7 @@ class SimulationSpec extends UnitSpec {
           .step(Place(1,1,North))
           .step(Right)
 
-        assert(simulation.robot == Some(Robot(1, 1, East)))
+        assert(simulation.robot == Some(Robot(Position(1, 1), East)))
       }
 
       it("should move up one square when given the Move command and facing NORTH") {
@@ -139,7 +139,7 @@ class SimulationSpec extends UnitSpec {
           .step(Place(2, 2, North))
           .step(Move)
 
-        assert(simulation.robot == Some(Robot(2, 3, North)))
+        assert(simulation.robot == Some(Robot(Position(2, 3), North)))
       }
 
       it("should move down one square when given the Move command and facing SOUTH") {
@@ -148,7 +148,7 @@ class SimulationSpec extends UnitSpec {
           .step(Place(2, 2, South))
           .step(Move)
 
-        assert(simulation.robot == Some(Robot(2, 1, South)))
+        assert(simulation.robot == Some(Robot(Position(2, 1), South)))
       }
 
       it("should move left one square when given the Move command and facing WEST") {
@@ -157,7 +157,7 @@ class SimulationSpec extends UnitSpec {
           .step(Place(2, 2, West))
           .step(Move)
 
-        assert(simulation.robot == Some(Robot(1, 2, West)))
+        assert(simulation.robot == Some(Robot(Position(1, 2), West)))
       }
 
       it("should move right one square when given the Move command and facing EAST") {
@@ -166,7 +166,7 @@ class SimulationSpec extends UnitSpec {
           .step(Place(2, 2, East))
           .step(Move)
 
-        assert(simulation.robot == Some(Robot(3, 2, East)))
+        assert(simulation.robot == Some(Robot(Position(3, 2), East)))
       }
 
       it("it should return a message containing the robots details when given the Report command") {
@@ -185,7 +185,7 @@ class SimulationSpec extends UnitSpec {
           .step(Report)
           .step(Move)
 
-        assert(simulation.robot == Some(Robot(0, 0, South)))
+        assert(simulation.robot == Some(Robot(Position(0, 0), South)))
         assert(simulation.messages.isEmpty)
       }
 
@@ -196,7 +196,7 @@ class SimulationSpec extends UnitSpec {
           .step(Move)
           .step(Move) // This robot is tenacious!
 
-        assert(simulation.robot == Some(Robot(4, 4, North)))
+        assert(simulation.robot == Some(Robot(Position(4, 4), North)))
       }
 
       it("should not fall off the SOUTH end of the table") {
@@ -206,7 +206,7 @@ class SimulationSpec extends UnitSpec {
           .step(Move)
           .step(Move)
 
-        assert(simulation.robot == Some(Robot(0, 0, South)))
+        assert(simulation.robot == Some(Robot(Position(0, 0), South)))
       }
 
       it("should not fall off the EAST end of the table") {
@@ -216,7 +216,7 @@ class SimulationSpec extends UnitSpec {
           .step(Move)
           .step(Move)
 
-        assert(simulation.robot == Some(Robot(4, 2, East)))
+        assert(simulation.robot == Some(Robot(Position(4, 2), East)))
       }
 
       it("should not fall off the WEST end of the table") {
@@ -226,7 +226,7 @@ class SimulationSpec extends UnitSpec {
           .step(Move)
           .step(Move)
 
-        assert(simulation.robot == Some(Robot(0, 2, West)))
+        assert(simulation.robot == Some(Robot(Position(0, 2), West)))
       }
 
       it("should not walk into objects") {
@@ -236,7 +236,7 @@ class SimulationSpec extends UnitSpec {
           .step(PlaceObject)
           .step(Move)
 
-        assert(simulation.robot == Some(Robot(1, 1, North)))
+        assert(simulation.robot == Some(Robot(Position(1, 1), North)))
       }
     }
   }
