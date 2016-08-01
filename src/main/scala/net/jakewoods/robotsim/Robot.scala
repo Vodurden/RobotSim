@@ -9,11 +9,9 @@ package net.jakewoods.robotsim
   * exist in a negative space.
   */
 case class Robot(x: Int, y: Int, facing: Facing) {
-  /** Returns a new robot that has moved robo-unit in the direction it's facing
-    *
-    * @return the updated robot
+  /** Returns the space the robot is looking at
     */
-  def move() = {
+  def targetedSpace(): (Int,Int) = {
     val directionVector = facing match {
       case North => (0, 1)
       case South => (0, -1)
@@ -23,6 +21,14 @@ case class Robot(x: Int, y: Int, facing: Facing) {
 
     val newX = x + directionVector._1
     val newY = y + directionVector._2
+    (newX, newY)
+  }
+  /** Returns a new robot that has moved robo-unit in the direction it's facing
+    *
+    * @return the updated robot
+    */
+  def move() = {
+    val (newX, newY) = targetedSpace()
 
     this.copy(x = newX, y = newY)
   }

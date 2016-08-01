@@ -41,11 +41,17 @@ class SimulationSpec extends UnitSpec {
 
         assert(simulation.robot == None)
       }
+
+      it("should not have any obstacles") {
+        val simulation = Simulation.create(5, 5)
+
+        assert(simulation.obstacles == Set())
+      }
     }
 
     describe("when it has no robot") {
       it("should ignore all commands other than Place") {
-        val commands = Seq(Move, Left, Right, Report)
+        val commands = Seq(PlaceObject, Move, Left, Right, Report)
 
         val originalSim = Simulation.create(5, 5)
         commands.foreach(command => {
@@ -89,6 +95,24 @@ class SimulationSpec extends UnitSpec {
           .step(Place(3,3,South))
 
         assert(simulation.robot == Some(Robot(3,3,South)))
+      }
+
+      it("the robot should place an object when given the PlaceObject command") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(1,1,North))
+          .step(PlaceObject)
+
+        assert(simulation.obstacles == Set((1,2)))
+      }
+
+      it("should not place obstacles off the table when given the PlaceObject command") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(0, 2, West))
+          .step(PlaceObject)
+
+        assert(simulation.obstacles == Set())
       }
 
       it("the robot should turn left when given the Left command") {
@@ -203,6 +227,16 @@ class SimulationSpec extends UnitSpec {
           .step(Move)
 
         assert(simulation.robot == Some(Robot(0, 2, West)))
+      }
+
+      it("should not walk into objects") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(1, 1, North))
+          .step(PlaceObject)
+          .step(Move)
+
+        assert(simulation.robot == Some(Robot(1, 1, North)))
       }
     }
   }

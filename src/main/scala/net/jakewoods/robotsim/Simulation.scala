@@ -5,8 +5,13 @@ package net.jakewoods.robotsim
 case class Simulation(
   xBounds: Range,
   yBounds: Range,
+  obstacles: Set[(Int,Int)],
   robot: Option[Robot],
   messages: Seq[String]) {
+
+  def run(commands: Iterator[RobotCommand]): Iterator[Simulation] = {
+    commands.scanLeft(this)((sim, command) => sim.step(command))
+  }
 
   /** Executes the command on the simulation and returns the updated simulation and any messages
     *
@@ -27,10 +32,15 @@ case class Simulation(
   def step(command: RobotCommand): Simulation = {
     // Apply our commands to our simulation state
     val nextRobot = stepRobot(this.robot, command)
+    val nextObstacles = stepObstacles(nextRobot, obstacles, command)
     val nextMessages = stepMessages(nextRobot, command)
 
     // Produce our new simulation
-    val nextSimulation = this.copy(robot = nextRobot, messages = nextMessages)
+    val nextSimulation = this.copy(
+      robot = nextRobot,
+      obstacles = nextObstacles,
+      messages = nextMessages
+    )
 
     // We only want to return the new simulation if it's valid. If it's not
     // we effectively 'undo' it by returning ourselves without any messages.
@@ -51,6 +61,15 @@ case class Simulation(
     }
   }
 
+  private def stepObstacles(robot: Option[Robot], obstacles: Set[(Int, Int)], command: RobotCommand): Set[(Int,Int)] = {
+    robot.map { r =>
+      command match {
+        case PlaceObject => obstacles + r.targetedSpace()
+        case _ => obstacles
+      }
+    }.getOrElse(obstacles)
+  }
+
   private def stepMessages(robot: Option[Robot], command: RobotCommand): List[String] = {
     robot.map { r =>
       command match {
@@ -65,13 +84,25 @@ case class Simulation(
     * A simulation is valid if:
     *
     * - The robot is within the bounds of the simulation
+    * - The robot is not colliding with an object
+    * - No obstacles are placed off the table
     *
     * @return True if the simulation is valid. False otherwise.
     */
   private def isValid(): Boolean = {
-    this.robot
+    val robotWithinBounds = this.robot
       .map(r => xBounds.contains(r.x) && yBounds.contains(r.y))
-      .getOrElse(true) // If we don't have a robot then our simulation is valid.
+      .getOrElse(true) // If we don't have a robot then our robot position is valid.
+
+    val robotNotInObjects = this.robot
+      .map(r => !obstacles.contains((r.x, r.y)))
+      .getOrElse(true) // If we don't have a robot then it's not in an object
+
+    val obstaclesWithinBounds = obstacles
+      .map(o => xBounds.contains(o._1) && yBounds.contains(o._2))
+      .foldRight(true)((a, b) => a && b)
+
+    robotWithinBounds && robotNotInObjects && obstaclesWithinBounds
   }
 }
 
@@ -86,6 +117,7 @@ object Simulation {
     xBounds = Range.inclusive(0, width - 1),
     yBounds = Range.inclusive(0, height - 1),
     robot = None,
+    obstacles = Set(),
     messages = List()
   )
 }
