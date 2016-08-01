@@ -95,6 +95,7 @@ object RobotCommand {
   private def place(command: String, arguments: Option[Array[String]]): Option[RobotCommand] = {
     for {
       args <- arguments
+      if command == "PLACE"
       if args.length == 3
       x <- Try(args(0).toInt).toOption
       y <- Try(args(1).toInt).toOption
