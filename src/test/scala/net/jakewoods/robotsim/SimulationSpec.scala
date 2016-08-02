@@ -50,7 +50,7 @@ class SimulationSpec extends UnitSpec {
     }
 
     describe("when it has no robot") {
-      it("should ignore all commands other than Place") {
+      it("should ignore all commands other than Place and Map") {
         val commands = Seq(PlaceObject, Move, Left, Right, Report)
 
         val originalSim = Simulation.create(5, 5)
@@ -84,6 +84,108 @@ class SimulationSpec extends UnitSpec {
           .step(Place(10, 10, North))
 
         assert(simulation.robot.isEmpty)
+      }
+    }
+
+    describe("when mapped") {
+      it("should print an empty board if no robot exists") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Map)
+
+        val expectedBoard =
+          """00000
+            |00000
+            |00000
+            |00000
+            |00000""".stripMargin
+
+        assert(simulation.messages == List(expectedBoard))
+      }
+
+      it("should print the robot facing north as ^") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(1,1,North))
+          .step(Map)
+
+        val expectedBoard =
+          """00000
+            |00000
+            |00000
+            |0^000
+            |00000""".stripMargin
+
+        assert(simulation.messages == List(expectedBoard))
+      }
+
+      it("should print the robot facing south as V") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(1,1,South))
+          .step(Map)
+
+        val expectedBoard =
+          """00000
+            |00000
+            |00000
+            |0V000
+            |00000""".stripMargin
+
+        assert(simulation.messages == List(expectedBoard))
+      }
+
+      it("should print the robot facing east as >") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(1,1,East))
+          .step(Map)
+
+        val expectedBoard =
+          """00000
+            |00000
+            |00000
+            |0>000
+            |00000""".stripMargin
+
+        assert(simulation.messages == List(expectedBoard))
+      }
+
+      it("should print the robot facing west as <") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(1,1,West))
+          .step(Map)
+
+        val expectedBoard =
+          """00000
+            |00000
+            |00000
+            |0<000
+            |00000""".stripMargin
+
+        assert(simulation.messages == List(expectedBoard))
+      }
+
+      it("should print obstacles as X") {
+        val simulation = Simulation
+          .create(5, 5)
+          .step(Place(1,1,West))
+          .step(PlaceObject)
+          .step(Right)
+          .step(Move)
+          .step(Left)
+          .step(PlaceObject)
+          .step(Map)
+
+        val expectedBoard =
+          """00000
+            |00000
+            |X<000
+            |X0000
+            |00000""".stripMargin
+
+        assert(simulation.messages == List(expectedBoard))
       }
     }
 

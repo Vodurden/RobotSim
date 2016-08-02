@@ -13,16 +13,13 @@ case class Robot(pos: Position, facing: Facing) {
     */
   def targetedSpace(): Position = {
     val directionVector = facing match {
-      case North => Position(0, 1)
-      case South => Position(0, -1)
-      case East => Position(1, 0)
-      case West => Position(-1, 0)
+      case North => (0, 1)
+      case South => (0, -1)
+      case East => (1, 0)
+      case West => (-1, 0)
     }
 
-    Position(
-      pos.x + directionVector.x,
-      pos.y + directionVector.y
-    )
+    Position(pos.x + directionVector._1, pos.y + directionVector._2)
   }
   /** Returns a new robot that has moved robo-unit in the direction it's facing
     *

@@ -9,6 +9,7 @@ import scala.util.Try
 sealed abstract class RobotCommand
 case class Place(x: Int, y: Int, facing: Facing) extends RobotCommand
 case object PlaceObject extends RobotCommand
+case object Map extends RobotCommand
 case object Move extends RobotCommand
 case object Left extends RobotCommand
 case object Right extends RobotCommand
@@ -71,6 +72,7 @@ object RobotCommand {
     // way to compose these functions as we only want to evaluate until our first successful match
     place(command, arguments)
       .orElse(placeObject(command, arguments))
+      .orElse(map(command, arguments))
       .orElse(move(command, arguments))
       .orElse(left(command, arguments))
       .orElse(right(command, arguments))
@@ -111,6 +113,16 @@ object RobotCommand {
     */
   private def placeObject(command: String, arguments: Option[Array[String]]): Option[RobotCommand] = {
     if(command == "PLACE_OBJECT" && arguments.isEmpty) Some(PlaceObject) else None
+  }
+
+  /** Attempts to parse the MAP command
+    *
+    * @param command the name of the command executed by the user
+    * @param arguments the arguments of the command executed by the user
+    * @return A [[Map]] command or None
+    */
+  private def map(command: String, arguments: Option[Array[String]]): Option[RobotCommand] = {
+    if(command == "MAP" && arguments.isEmpty) Some(Map) else None
   }
 
   /** Attempts to parse the MOVE command

@@ -51,6 +51,14 @@ class RobotCommandSpec extends UnitSpec {
       assert(RobotCommand.string2command("PLACE_OBJECT arg") == None)
     }
 
+    it("should return Some(Map) when given MAP") {
+      assert(RobotCommand.string2command("MAP") == Some(Map))
+    }
+
+    it("should return None when given MAP with arguments") {
+      assert(RobotCommand.string2command("MAP arg") == None)
+    }
+
     it("should return Some(Move) when given MOVE") {
       assert(RobotCommand.string2command("MOVE") == Some(Move))
     }

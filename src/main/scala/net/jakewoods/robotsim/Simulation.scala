@@ -9,8 +9,46 @@ case class Simulation(
   robot: Option[Robot],
   messages: Seq[String]) {
 
-  def run(commands: Iterator[RobotCommand]): Iterator[Simulation] = {
-    commands.scanLeft(this)((sim, command) => sim.step(command))
+  /** Returns a string representation of the current mapping
+    *
+    * Legend:
+    * 0: Empty space
+    * X: Obstacle
+    * ^: The Robot (Facing North)
+    * <: The Robot (Facing West)
+    * >: The Robot (Facing East)
+    * V: The Robot (Facing Down)
+    */
+  def asciiMap(): String = {
+    def facingToCharacter(facing: Facing): String = facing match {
+      case North => "^"
+      case South => "V"
+      case East => ">"
+      case West => "<"
+    }
+
+    def positionToCharacter(pos: Position): String = {
+      // Are we the robot?
+      val robotSpace = robot.filter(_.pos == pos).map(r => facingToCharacter(r.facing))
+
+      // Are we an obstacle?
+      val obstacle = if(obstacles.contains(pos)) Some("X") else None
+
+      // Default back to '0'
+      robotSpace
+        .orElse(obstacle)
+        .getOrElse("0")
+    }
+
+    val rows = for {
+      y <- yBounds
+      chars = for(x <- xBounds) yield positionToCharacter(Position(x,y))
+      row = chars.mkString("")
+    } yield row
+
+    // We reverse our rows because 0,0 is the *bottom left* of the board but we've
+    // mapped it like it's the top left.
+    rows.reverse.mkString("\n")
   }
 
   /** Executes the command on the simulation and returns the updated simulation and any messages
@@ -71,12 +109,11 @@ case class Simulation(
   }
 
   private def stepMessages(robot: Option[Robot], command: RobotCommand): List[String] = {
-    robot.map { r =>
-      command match {
-        case Report => List(Robot.robot2string(r))
-        case _ => List()
-      }
-    }.getOrElse(List()) // No robot means no messages
+    command match {
+      case Report => robot.map { r => List(Robot.robot2string(r)) }.getOrElse(List())
+      case Map => List(this.asciiMap())
+      case _ => List()
+    }
   }
 
   /** Validates the state of this simulation
