@@ -19,7 +19,7 @@ case class Simulation(
     * >: The Robot (Facing East)
     * V: The Robot (Facing Down)
     */
-  def asciiMap(): String = {
+  def asciiMap(robot: Option[Robot], obstacles: Set[Position]): String = {
     def facingToCharacter(facing: Facing): String = facing match {
       case North => "^"
       case South => "V"
@@ -71,7 +71,7 @@ case class Simulation(
     // Apply our commands to our simulation state
     val nextRobot = stepRobot(this.robot, command)
     val nextObstacles = stepObstacles(nextRobot, obstacles, command)
-    val nextMessages = stepMessages(nextRobot, command)
+    val nextMessages = stepMessages(nextRobot, nextObstacles, command)
 
     // Produce our new simulation
     val nextSimulation = this.copy(
@@ -108,11 +108,14 @@ case class Simulation(
     }.getOrElse(obstacles)
   }
 
-  private def stepMessages(robot: Option[Robot], command: RobotCommand): List[String] = {
+  private def stepMessages(robot: Option[Robot], obstacles: Set[Position], command: RobotCommand): List[String] = {
+    // We want to print the asciiMap after every command except report.
     command match {
       case Report => robot.map { r => List(Robot.robot2string(r)) }.getOrElse(List())
-      case Map => List(this.asciiMap())
-      case _ => List()
+      // Commands that should print the map regardless of if the robot exists
+      case Place(_,_,_) | Map => List(asciiMap(robot, obstacles))
+      // Commands that should print the map if the robot exists
+      case Move | Left | Right | PlaceObject => robot.map { _ => List(asciiMap(robot, obstacles)) }.getOrElse(List())
     }
   }
 
